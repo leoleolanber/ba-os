@@ -1,0 +1,11 @@
+{
+  "kwinrc": {
+    "Shortcuts": {
+      "Custom_1": {
+        "Name": "碧蓝档案平板模式切换",
+        "Command": "/usr/local/bin/ba-tablet-mode toggle",
+        "Key": "Ctrl+Shift+Alt+Tab"
+      }
+    }
+  }
+}

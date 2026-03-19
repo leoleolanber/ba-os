@@ -104,7 +104,7 @@ enable_tablet_mode() {
     qdbus org.kde.plasmashell /PlasmaShell org.kde.plasmashell.evaluateScript "plasmashell restart"
     
     log_success "已切换到平板模式！"
-    log_info "提示：使用 Super + T 快捷键可以快速切换回桌面模式"
+    log_info "提示：使用 Ctrl + Shift + Alt + Tab 快捷键可以快速切换回桌面模式"
 }
 
 # 切换到桌面模式
@@ -165,7 +165,7 @@ show_help() {
     echo "  status, check         显示当前模式"
     echo "  help, -h, --help      显示此帮助信息"
     echo ""
-    echo "快捷键：Super + T"
+    echo "快捷键：Ctrl + Shift + Alt + Tab"
     echo ""
     echo "示例:"
     echo "  ba-tablet-mode on      # 切换到平板模式"

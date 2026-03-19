@@ -101,7 +101,7 @@ sudo bash ai-assistant-installer.sh
 
 **三种方式**:
 
-1. **快捷键**: `Super + T`（Windows 键 + T）
+1. **快捷键**: `Ctrl + Shift + Alt + Tab`
 
 2. **命令行**:
    ```bash
@@ -117,7 +117,7 @@ sudo bash ai-assistant-installer.sh
 
 **启动方式**:
 
-1. **快捷键**: `Super + A`
+1. **快捷键**: `Super + A` 或 `Ctrl + Shift + Alt + A`
 
 2. **应用菜单**: 搜索"阿罗娜"
 
@@ -125,6 +125,13 @@ sudo bash ai-assistant-installer.sh
    ```bash
    python3 ~/.config/ba-ai-assistant/assistant.py
    ```
+
+**配置**（首次使用）:
+```bash
+cd ~/root
+sudo bash ai-assistant-installer.sh
+# 按提示选择 AI 服务（推荐阿里云通义千问 API）
+```
 
 ### 中文输入法
 

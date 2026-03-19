@@ -8,8 +8,13 @@ set -e
 
 # 配置
 AI_ASSISTANT_NAME="Arona"  # 或 "Plana"
-AI_MODEL="qwen2.5:7b"  # 可配置
-AI_PORT="11434"  # Ollama 默认端口
+AI_MODE="api"  # "api" 或 "local"
+# API 模式配置（推荐使用通义千问/DeepSeek 等）
+AI_API_URL="https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation"
+AI_API_KEY=""  # 用户自行配置
+AI_MODEL="qwen-plus"  # API 模型名称
+# 本地模式配置（备用）
+AI_LOCAL_PORT="11434"  # Ollama 默认端口
 CONFIG_DIR="$HOME/.config/ba-ai-assistant"
 DATA_DIR="$HOME/.local/share/ba-ai-assistant"
 
@@ -35,7 +40,7 @@ check_dependencies() {
     
     local missing=()
     
-    for cmd in python3 pip3 ollama; do
+    for cmd in python3 pip3; do
         if ! command -v "$cmd" &> /dev/null; then
             missing+=("$cmd")
         fi
@@ -46,18 +51,65 @@ check_dependencies() {
         log_info "正在安装..."
         
         if command -v pacman &> /dev/null; then
-            sudo pacman -S --needed python pip ollama
+            sudo pacman -S --needed python pip
         elif command -v apt &> /dev/null; then
             sudo apt install -y python3 python3-pip
         fi
     fi
     
+    # 安装 Python 依赖
+    log_info "安装 Python 依赖..."
+    pip3 install requests PyQt5 --user
+    
     log_success "依赖检查完成"
 }
 
-# 安装 Ollama
+# 配置 API 密钥
+configure_api_key() {
+    log_info "配置 AI API 密钥..."
+    echo ""
+    echo "请选择 AI 服务提供商:"
+    echo "1) 阿里云通义千问 (推荐)"
+    echo "2) DeepSeek"
+    echo "3) 本地 Ollama (需要下载模型)"
+    echo "4) 跳过配置 (稍后手动配置)"
+    echo ""
+    read -p "选择 [1-4]: " -n 1 -r
+    echo
+    
+    case $REPLY in
+        1)
+            read -p "请输入 DashScope API Key: " api_key
+            echo "AI_API_URL=https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation" > "$CONFIG_DIR/api.conf"
+            echo "AI_API_KEY=$api_key" >> "$CONFIG_DIR/api.conf"
+            echo "AI_MODEL=qwen-plus" >> "$CONFIG_DIR/api.conf"
+            log_success "通义千问配置完成"
+            ;;
+        2)
+            read -p "请输入 DeepSeek API Key: " api_key
+            echo "AI_API_URL=https://api.deepseek.com/v1/chat/completions" >> "$CONFIG_DIR/api.conf"
+            echo "AI_API_KEY=$api_key" >> "$CONFIG_DIR/api.conf"
+            echo "AI_MODEL=deepseek-chat" >> "$CONFIG_DIR/api.conf"
+            log_success "DeepSeek 配置完成"
+            ;;
+        3)
+            echo "AI_MODE=local" > "$CONFIG_DIR/api.conf"
+            log_info "本地模式：需要安装 Ollama"
+            install_ollama
+            download_model "qwen2.5:7b"
+            ;;
+        4)
+            log_info "已跳过配置，稍后可手动编辑 $CONFIG_DIR/api.conf"
+            ;;
+        *)
+            log_warning "无效选择，使用默认配置"
+            ;;
+    esac
+}
+
+# 安装 Ollama（备用）
 install_ollama() {
-    log_info "安装 Ollama..."
+    log_info "安装 Ollama（本地模式备用）..."
     
     if ! command -v ollama &> /dev/null; then
         curl -fsSL https://ollama.com/install.sh | sh
@@ -67,25 +119,14 @@ install_ollama() {
     fi
 }
 
-# 下载 AI 模型
+# 下载 AI 模型（本地模式备用）
 download_model() {
-    local model=${1:-$AI_MODEL}
+    local model=${1:-qwen2.5:7b}
     
     log_info "下载 AI 模型：$model"
     ollama pull "$model"
     log_success "模型下载完成"
 }
-
-# 启动 Ollama 服务
-start_ollama() {
-    log_info "启动 Ollama 服务..."
-    
-    if ! systemctl is-active --quiet ollama; then
-        sudo systemctl enable ollama
-        sudo systemctl start ollama
-    fi
-    
-    log_success "Ollama 服务已启动"
 }
 
 # 创建 AI 助手前端
@@ -112,8 +153,33 @@ class AronaAssistant(QMainWindow):
     def __init__(self):
         super().__init__()
         self.init_ui()
-        self.ollama_url = "http://localhost:11434/api/generate"
-        self.model = "qwen2.5:7b"
+        # 加载 API 配置
+        self.config_file = os.path.expanduser("~/.config/ba-ai-assistant/api.conf")
+        self.load_config()
+        
+    def load_config(self):
+        """加载 API 配置"""
+        self.api_mode = True  # 默认 API 模式
+        self.api_url = "https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation"
+        self.api_key = ""
+        self.model = "qwen-plus"
+        
+        if os.path.exists(self.config_file):
+            with open(self.config_file, 'r', encoding='utf-8') as f:
+                for line in f:
+                    line = line.strip()
+                    if line.startswith("AI_MODE="):
+                        self.api_mode = (line.split("=")[1] != "local")
+                    elif line.startswith("AI_API_URL="):
+                        self.api_url = line.split("=", 1)[1]
+                    elif line.startswith("AI_API_KEY="):
+                        self.api_key = line.split("=", 1)[1]
+                    elif line.startswith("AI_MODEL="):
+                        self.model = line.split("=", 1)[1]
+                    elif line.startswith("AI_LOCAL_PORT="):
+                        self.ollama_url = f"http://localhost:{line.split('=')[1]}/api/generate"
+        else:
+            self.ollama_url = "http://localhost:11434/api/generate"
         
     def init_ui(self):
         """初始化界面 - 碧蓝档案风格"""
@@ -245,16 +311,12 @@ class AronaAssistant(QMainWindow):
     def get_ai_response(self, user_input):
         """获取 AI 回复"""
         try:
-            payload = {
-                "model": self.model,
-                "prompt": f"你是碧蓝档案中的阿罗娜，是夏莱的秘书。请用温柔、专业但亲切的语气回答老师的问题。保持回答简洁有用。用户问题：{user_input}",
-                "stream": False
-            }
-            
-            response = requests.post(self.ollama_url, json=payload, timeout=60)
-            response.raise_for_status()
-            
-            ai_reply = response.json().get("response", "抱歉，老师，我遇到了一些问题...")
+            if self.api_mode and self.api_key:
+                # API 模式（通义千问/DeepSeek 等）
+                ai_reply = self.call_api(user_input)
+            else:
+                # 本地 Ollama 模式
+                ai_reply = self.call_ollama(user_input)
             
             # 在主线程更新 UI
             QMetaObject.invokeMethod(self, "update_ui_with_response", 
@@ -265,6 +327,65 @@ class AronaAssistant(QMainWindow):
             QMetaObject.invokeMethod(self, "update_ui_with_error", 
                                     Qt.QueuedConnection,
                                     Q_ARG(str, str(e)))
+    
+    def call_api(self, user_input):
+        """调用 AI API（通义千问/DeepSeek 等）"""
+        # 通义千问格式
+        if "dashscope" in self.api_url:
+            payload = {
+                "model": self.model,
+                "input": {
+                    "messages": [
+                        {"role": "system", "content": "你是碧蓝档案中的阿罗娜，是夏莱的秘书。请用温柔、专业但亲切的语气回答老师的问题。保持回答简洁有用。"},
+                        {"role": "user", "content": user_input}
+                    ]
+                },
+                "parameters": {
+                    "result_format": "message"
+                }
+            }
+            headers = {
+                "Authorization": f"Bearer {self.api_key}",
+                "Content-Type": "application/json"
+            }
+            response = requests.post(self.api_url, json=payload, headers=headers, timeout=60)
+            response.raise_for_status()
+            result = response.json()
+            return result.get("output", {}).get("choices", [{}])[0].get("message", {}).get("content", "抱歉，老师，我遇到了一些问题...")
+        
+        # DeepSeek/OpenAI 兼容格式
+        elif "chat/completions" in self.api_url:
+            payload = {
+                "model": self.model,
+                "messages": [
+                    {"role": "system", "content": "你是碧蓝档案中的阿罗娜，是夏莱的秘书。请用温柔、专业但亲切的语气回答老师的问题。保持回答简洁有用。"},
+                    {"role": "user", "content": user_input}
+                ],
+                "stream": False
+            }
+            headers = {
+                "Authorization": f"Bearer {self.api_key}",
+                "Content-Type": "application/json"
+            }
+            response = requests.post(self.api_url, json=payload, headers=headers, timeout=60)
+            response.raise_for_status()
+            result = response.json()
+            return result.get("choices", [{}])[0].get("message", {}).get("content", "抱歉，老师，我遇到了一些问题...")
+        
+        else:
+            # 通用回退
+            return self.call_ollama(user_input)
+    
+    def call_ollama(self, user_input):
+        """调用本地 Ollama"""
+        payload = {
+            "model": self.model if hasattr(self, 'model') else "qwen2.5:7b",
+            "prompt": f"你是碧蓝档案中的阿罗娜，是夏莱的秘书。请用温柔、专业但亲切的语气回答老师的问题。保持回答简洁有用。用户问题：{user_input}",
+            "stream": False
+        }
+        response = requests.post(self.ollama_url, json=payload, timeout=60)
+        response.raise_for_status()
+        return response.json().get("response", "抱歉，老师，我遇到了一些问题...")
     
     @pyqtSlot(str)
     def update_ui_with_response(self, response):

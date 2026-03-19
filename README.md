@@ -143,11 +143,11 @@ sudo ./build-iso.sh
 
 | 快捷键 | 功能 |
 |--------|------|
-| `Super + T` | 切换平板模式 |
-| `Super + A` | 启动 AI 助手 |
-| `Super + 空格` | 切换输入法 |
+| `Ctrl + Shift + Alt + Tab` | 切换平板模式 |
+| `Super + A` 或 `Ctrl + Shift + Alt + A` | 启动 AI 助手 |
+| `Super + 空格` 或 `Ctrl + 空格` | 切换输入法 |
 | `Alt + Tab` | 切换应用 |
-| `Super` | 打开应用菜单 |
+| `Super` 或 `Menu` | 打开应用菜单 |
 
 ### 平板模式
 
@@ -171,7 +171,7 @@ ba-tablet-mode status
 
 1. **启动方式**:
    - 应用菜单 → 阿罗娜 AI 助手
-   - 快捷键：`Super + A`
+   - 快捷键：`Super + A` 或 `Ctrl + Shift + Alt + A`
    - 命令行：`python3 ~/.config/ba-ai-assistant/assistant.py`
 
 2. **首次使用**:
@@ -179,9 +179,16 @@ ba-tablet-mode status
    # 安装 AI 助手
    ~/root/ai-assistant-installer.sh
    
-   # 下载模型（约 2-4GB）
-   ollama pull qwen2.5:7b
+   # 按提示配置 AI 服务：
+   # - 阿里云通义千问（推荐，API 调用）
+   # - DeepSeek（API 调用）
+   # - 本地 Ollama（可选，需下载 2-4GB 模型）
    ```
+
+3. **API 配置**（推荐）:
+   - 通义千问：https://dashscope.console.aliyun.com/apiKey
+   - DeepSeek：https://platform.deepseek.com/api_keys
+   - 配置文件：`~/.config/ba-ai-assistant/api.conf`
 
 ---
 
