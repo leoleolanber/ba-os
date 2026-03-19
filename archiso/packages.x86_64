@@ -1,0 +1,347 @@
+# ============================================
+# Blue Archive Teacher OS - 完整软件包列表
+# 基于纯 Arch Linux 基层
+# ============================================
+
+# ========== 基础系统 ==========
+base
+base-devel
+linux
+linux-firmware
+linux-headers
+
+# ========== 引导加载器 ==========
+grub
+efibootmgr
+os-prober
+
+# ========== 文件系统支持 ==========
+btrfs-progs
+dosfstools
+e2fsprogs
+f2fs-tools
+ntfs-3g
+xfsprogs
+
+# ========== 网络管理 ==========
+networkmanager
+network-manager-applet
+wpa_supplicant
+bluez
+bluez-utils
+blueman
+
+# ========== KDE Plasma 桌面环境 ==========
+plasma-meta
+plasma-desktop
+kde-applications-meta
+kde-graphics-meta
+kde-multimedia-meta
+kde-network-meta
+kde-utilities-meta
+kde-edu-meta
+kde-games-meta
+
+# ========== 系统工具 ==========
+kwin
+kwin-rules-scripts
+kde-cli-tools
+dolphin
+konsole
+kate
+ark
+gwenview
+okular
+spectacle
+kcalc
+krfb
+krb5
+
+# ========== 显示管理器 ==========
+sddm
+sddm-kcm
+
+# ========== 浏览器 ==========
+firefox
+firefox-i18n-zh-cn
+
+# ========== 办公套件 ==========
+libreoffice-fresh
+libreoffice-fresh-zh-cn
+hunspell
+hunspell-zh-cn
+
+# ========== 媒体播放 ==========
+vlc
+mpv
+mpv-mpris
+spotify
+ffmpeg
+gstreamer
+gst-plugins-good
+gst-plugins-bad
+gst-plugins-ugly
+
+# ========== 开发工具 ==========
+git
+python
+python-pip
+nodejs
+npm
+code
+visual-studio-code-bin
+jdk-openjdk
+maven
+gradle
+
+# ========== 游戏 ==========
+steam
+lutris
+wine
+winetricks
+gamemode
+mangoapp
+
+# ========== 字体 ==========
+noto-fonts
+noto-fonts-cjk
+noto-fonts-emoji
+adobe-source-han-sans-cn-fonts
+adobe-source-han-serif-cn-fonts
+ttf-dejavu
+ttf-liberation
+ttf-hack
+ttf-jetbrains-mono
+ttf-fira-code
+ttf-fira-sans
+ttf-fira-mono
+ttf-droid
+ttf-inconsolata
+ttf-roboto
+ttf-roboto-mono
+
+# ========== 输入法和语言支持 ==========
+fcitx5
+fcitx5-im
+fcitx5-chinese-addons
+fcitx5-pinyin
+fcitx5-pinyin-zhwiki
+fcitx5-rime
+fcitx5-configtool
+kcm-fcitx5
+gettext
+localepurge
+
+# ========== 平板模式支持 ==========
+kcm-tablet
+plasma-applets-active-window-control
+libinput
+xf86-input-libinput
+touchegg
+touchegg-gui
+
+# ========== 触摸手势 ==========
+libgesture
+kwin-scripts-forceblur
+kwin-scripts-window-appmenu
+kwin-scripts-window-buttons
+
+# ========== 系统监控 ==========
+htop
+neofetch
+btop
+nvtop
+powertop
+lm_sensors
+
+# ========== 备份和恢复 ==========
+timeshift
+rsync
+clonezilla
+
+# ========== 安全工具 ==========
+firewalld
+ufw
+gufw
+clamav
+clamtk
+veracrypt
+
+# ========== 云存储 ==========
+dropbox
+nextcloud-client
+megasync
+
+# ========== 通讯工具 ==========
+telegram-desktop
+discord
+wechat-uos
+qq
+
+# ========== 下载工具 ==========
+aria2
+motrix
+qbittorrent
+transmission-gtk
+
+# ========== 压缩工具 ==========
+p7zip
+unzip
+unrar
+zip
+
+# ========== 文档查看 ==========
+evince
+mupdf
+
+# ========== 截图和录屏 ==========
+flameshot
+obs-studio
+simple-screen-recorder
+
+# ========== 系统优化 ==========
+tuned
+tlp
+tlp-rdw
+powertop
+cpupower-gui
+
+# ========== 主题和美化 ==========
+kvantum
+kvantum-qt5
+kvantum-theme-arc
+arc-kde
+white-sur-kde
+sweet-kde-theme
+lassie-kde-theme
+
+# ========== 图标包 ==========
+breeze-icons
+breeze-icons-dark
+papirus-icon-theme
+ Tela-circle-icon-theme-dracula
+numix-circle-icon-theme
+
+# ========== 光标主题 ==========
+breeze-cursor
+capitaine-cursors
+comix-cursors
+
+# ========== 登录界面主题 ==========
+sddm-ayu-theme
+sddm-sugar-candy-git
+
+# ========== 终端增强 ==========
+alacritty
+kitty
+zsh
+zsh-completions
+oh-my-zsh-git
+starship
+bat
+exa
+fd
+ripgrep
+fzf
+tmux
+
+# ========== 系统清理 ==========
+bleachbit
+stacer
+julia
+
+# ========== 网络工具 ==========
+net-tools
+inetutils
+dnsutils
+networkmanager-openvpn
+networkmanager-openconnect
+networkmanager-pptp
+networkmanager-l2tp
+speedtest-cli
+
+# ========== 蓝牙音频 ==========
+pulseaudio
+pulseaudio-alsa
+pulseaudio-bluetooth
+pavucontrol
+
+# ========== 打印支持 ==========
+cups
+cups-pdf
+system-config-printer
+
+# ========== 扫描支持 ==========
+simple-scan
+sane
+
+# ========== 虚拟机支持 ==========
+virt-manager
+qemu-full
+dnsmasq
+bridge-utils
+libvirt
+
+# ========== 容器支持 ==========
+docker
+docker-compose
+podman
+podman-compose
+
+# ========== 数据库 ==========
+sqlite
+postgresql
+mysql
+redis
+
+# ========== AI 和本地大模型 ==========
+ollama
+open-webui
+python-pytorch
+python-tensorflow
+python-scikit-learn
+
+# ========== 语音识别和 TTS ==========
+vosk
+piper-tts
+espeak-ng
+espeakedit
+
+# ========== 平板模式专用 ==========
+plasma-mobile
+maui-meta
+kdeconnect
+kdeconnect-kcm
+
+# ========== 额外工具 ==========
+gnome-disk-utility
+gparted
+balena-etcher
+ventoy
+grub-customizer
+timeshift
+backintime
+
+# ========== 游戏工具 ==========
+heroic-games-launcher-bin
+lutris
+bottles
+protonup-qt
+
+# ========== 系统监控 ==========
+gnome-system-monitor
+ksystemlog
+filelight
+baobab
+
+# ========== 其他实用工具 ==========
+flameshot
+peek
+gnome-calculator
+gnome-calendar
+gnome-clocks
+gnome-weather
+gnome-maps
+gnome-contacts
+gnome-dictionary
+gnome-documents

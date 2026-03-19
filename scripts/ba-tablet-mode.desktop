@@ -1,0 +1,13 @@
+[Desktop Entry]
+Name=碧蓝档案平板模式
+Name[zh_CN]=碧蓝档案平板模式
+Comment=一键切换桌面/平板模式
+Comment[zh_CN]=一键切换桌面/平板模式
+Exec=/usr/local/bin/ba-tablet-mode toggle
+Icon=video-display
+Terminal=false
+Type=Application
+Categories=Settings;HardwareSettings;
+Keywords=tablet;touch;mode;switch;
+Keywords[zh_CN]=平板;触摸;模式;切换;
+StartupNotify=false

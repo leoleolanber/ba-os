@@ -1,0 +1,12 @@
+============================================
+  碧蓝档案老师专属操作系统
+  Blue Archive Teacher OS Builder
+  版本：1.0.0
+============================================
+
+[0;34m[INFO][0m 非交互式模式：自动确认构建
+
+[0;34m[INFO][0m 检查系统依赖...
+[0;31m[✗][0m 缺少依赖：archiso mkarchiso squashfs-tools isolinux syslinux grub dosfstools xorriso
+[0;34m[INFO][0m 正在安装...
+sudo: pacman: command not found
